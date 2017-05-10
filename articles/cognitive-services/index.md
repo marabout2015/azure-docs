@@ -94,7 +94,7 @@ Learn how to enable natural and contextual interaction within your applications 
         </a>
     </li>
     <li>
-        <a href="/azure/cognitive-services/custom-speech-service/home">
+        <a href="/azure/cognitive-services/custom-speech-service/custom-speech-service-home">
         <div class="cardSize">
             <div class="cardPadding">
                 <div class="card">
