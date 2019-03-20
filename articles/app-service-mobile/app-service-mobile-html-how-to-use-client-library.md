@@ -3,8 +3,8 @@ title: How to Use the JavaScript SDK for Azure Mobile Apps
 description: How to Use v for Azure Mobile Apps
 services: app-service\mobile
 documentationcenter: javascript
-author: adrianhall
-manager: adrianha
+author: conceptdev
+manager: crdun
 editor: ''
 
 ms.assetid: 53b78965-caa3-4b22-bb67-5bd5c19d03c4
@@ -14,7 +14,7 @@ ms.tgt_pltfrm: html
 ms.devlang: javascript
 ms.topic: article
 ms.date: 10/30/2016
-ms.author: adrianha
+ms.author: crdun
 
 ---
 # How to Use the JavaScript client library for Azure Mobile Apps
@@ -44,10 +44,10 @@ npm install azure-mobile-apps-client --save
 The library can also be used as an ES2015 module, within CommonJS environments such as Browserify and
 Webpack and as an AMD library.  For example:
 
-```
-# For ECMAScript 5.1 CommonJS
+```javascript
+// For ECMAScript 5.1 CommonJS
 var WindowsAzure = require('azure-mobile-apps-client');
-# For ES2015 modules
+// For ES2015 modules
 import * as WindowsAzure from 'azure-mobile-apps-client';
 ```
 
@@ -115,5 +115,4 @@ After the backend updates, you will be able to use the new loopback URLs in your
 
 [Azure portal]: https://portal.azure.com/
 [JavaScript SDK for Azure Mobile Apps]: https://www.npmjs.com/package/azure-mobile-apps-client
-[Query object documentation]: https://msdn.microsoft.com/en-us/library/azure/jj613353.aspx
-
+[Query object documentation]: https://msdn.microsoft.com/library/azure/jj613353.aspx

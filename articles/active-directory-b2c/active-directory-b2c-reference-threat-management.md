@@ -1,31 +1,37 @@
 ---
-title: Threat Management for Azure B2C | Microsoft Docs
-description: DOS attacks and Password Attacks detection and mitigation techniques in Azure B2C.
+title: Manage threats to resources and data in Azure Active Directory B2C | Microsoft Docs
+description: Learn about detection and mitigation techniques for denial-of-service attacks and password attacks in Azure Active Directory B2C.
 services: active-directory-b2c
-documentationcenter: ''
-author: vigunase
-manager: Ajith Alexander
-editor: ''
+author: davidmu1
+manager: daveba
 
-ms.assetid: 6df79878-65cb-4dfc-98bb-2b328055bc2e
-ms.service: active-directory-b2c
+ms.service: active-directory
 ms.workload: identity
-ms.tgt_pltfrm: na
-ms.devlang: na
-ms.topic: article
-ms.date: 03/27/2016
-ms.author: 
-
+ms.topic: conceptual
+ms.date: 11/01/2018
+ms.author: davidmu
+ms.subservice: B2C
 ---
-# Azure AD B2C: Threat Management
-Threat Management includes protection from attacks against the system and networks. Denial-of-service (DOS) can affect the availability and makes the resource unavailable to the intended users. Password attacks lead to unauthorized access to resources. Microsoft Azure Active Directory B2C has built-in features to protect your data against these threats in multiple ways. 
+# Manage threats to resources and data in Azure Active Directory B2C
 
-## Denial of Service Attack
+Azure Active Directory (Azure AD) B2C has built-in features that can help you protect against threats to your resources and data. These threats include denial-of-service attacks and password attacks. Denial-of-service attacks might make resources unavailable to intended users. Password attacks lead to unauthorized access to resources. 
 
-Azure AD B2C uses Detection and Mitigation techniques such as SYN cookies, rate and connection limits, to protect the underlying resources against these attacks.  
+## Denial-of-service attacks
 
-## Password Attacks
+Azure AD B2C defends against SYN flood attacks using a SYN cookie. Azure AD B2C also protects against denial-of-service attacks by using limits for rates and connections.
 
-Azure AD B2C also has mitigations in place for password attacks.  This technique includes both brute-force password attacks and dictionary password attacks.  Passwords set by users are required to be of reasonable complexity.  Azure AD B2C analyzes the integrity of requests to intelligently differentiate between intended users from hackers and botnets, using a various signals. B2C provides a sophisticated strategy to lock accounts based on the passwords entered, on the likelihood of an attack.
+## Password attacks
 
-[More information on Microsoft's Threat Management](https://www.microsoft.com/trustcenter/security/threatmanagement)
+Passwords that are set by users are required to be reasonably complex. Azure AD B2C has mitigation techniques in place for password attacks. Mitigation includes brute-force password attacks and dictionary password attacks. By using various signals, Azure AD B2C analyzes the integrity of requests. Azure AD B2C is designed to intelligently differentiate intended users from hackers and botnets. 
+
+Azure AD B2C uses a sophisticated strategy to lock accounts. The accounts are locked based on the IP of the request and the passwords entered. The duration of the lockout also increases based on the likelihood that it's an attack. After a password is tried 10 times unsuccessfully, a one-minute lockout occurs. The next time a login is unsuccessful after the account is unlocked, another one-minute lockout occurs and continues for each unsuccessful login. Entering the same password repeatedly doesn't count as multiple unsuccessful logins. 
+
+The first 10 lockout periods are one minute long. The next 10 lockout periods are slightly longer and increase in duration after every 10 lockout periods. The lockout counter resets to zero after a successful login when the account isn’t locked. Lockout periods can last up to five hours. 
+
+Currently, you can't:
+
+- Trigger a lockout with fewer than 10 failed logins
+- Retrieve a list of locked out accounts
+- Configure the lock out policy
+
+For more information, visit the [Microsoft Trust Center](https://www.microsoft.com/trustcenter/default.aspx).

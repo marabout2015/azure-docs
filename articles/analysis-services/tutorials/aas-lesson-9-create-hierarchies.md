@@ -1,24 +1,17 @@
 ---
 title: "Azure Analysis Services tutorial lesson 9: Create hierarchies | Microsoft Docs"
-description: 
-services: analysis-services
-documentationcenter: ''
+description: Describes how to create hierarchies in a tabular model.
 author: minewiskan
-manager: erikre
-editor: ''
-tags: ''
-
-ms.assetid: 
-ms.service: analysis-services
-ms.devlang: NA
-ms.topic: article
-ms.tgt_pltfrm: NA
-ms.workload: na
-ms.date: 05/02/2017
+manager: kfile
+ms.service: azure-analysis-services
+ms.topic: conceptual
+ms.date: 01/09/2019
 ms.author: owend
+ms.reviewer: minewiskan
 ---
-# Lesson 9: Create hierarchies
-In this lesson, you create hierarchies. Hierarchies are groups of columns arranged in levels; for example, a Geography hierarchy might have sub-levels for Country, State, County, and City. Hierarchies can appear separate from other columns in a reporting client application field list, making them easier for client users to navigate and include in a report. To learn more, see [Hierarchies](https://docs.microsoft.com/sql/analysis-services/tabular-models/hierarchies-ssas-tabular)
+# Create hierarchies
+
+In this lesson, you create hierarchies. Hierarchies are groups of columns arranged in levels. For example, a Geography hierarchy might have sublevels for Country, State, County, and City. Hierarchies can appear separate from other columns in a reporting client application field list, making them easier for client users to navigate and include in a report. To learn more, see [Hierarchies](https://docs.microsoft.com/sql/analysis-services/tabular-models/hierarchies-ssas-tabular)
   
 To create hierarchies, use the model designer in *Diagram View*. Creating and managing hierarchies is not supported in Data View.  
   
@@ -35,7 +28,7 @@ This topic is part of a tabular modeling tutorial, which should be completed in 
   
 2.  Click and drag the **ProductCategoryName** column to the new **Category** hierarchy.  
   
-3.  In the **Category** hierarchy, right-click the **ProductCategoryName** > **Rename**, and then type **Category**.  
+3.  In the **Category** hierarchy, right-click **ProductCategoryName** > **Rename**, and then type **Category**.  
   
     > [!NOTE]  
     > Renaming a column in a hierarchy does not rename that column in the table. A column in a hierarchy is just a representation of the column in the table.  
@@ -50,7 +43,7 @@ This topic is part of a tabular modeling tutorial, which should be completed in 
   
 #### To create hierarchies in the DimDate table  
   
-1.  In the **DimDate** table, create a new hierarchy named **Calendar**.  
+1.  In the **DimDate** table, create a hierarchy named **Calendar**.  
   
 3.  Add the following columns in-order:
 
@@ -73,7 +66,7 @@ This topic is part of a tabular modeling tutorial, which should be completed in 
     *  WeekNumberOfYear
     *  DayNumberOfWeek
   
- ## What's next?
+## What's next?
 [Lesson 10: Create partitions](../tutorials/aas-lesson-10-create-partitions.md). 
   
   

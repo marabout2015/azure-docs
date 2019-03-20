@@ -1,5 +1,11 @@
->[!WARNING]
-> Custom policies are in private preview.
-
->[!NOTE]
-> [Custom policies](..\articles\active-directory-b2c\active-directory-b2c-overview-custom.md#custom-policies) are designed primarily for identity pros who are addressing complex scenarios.  Azure AD B2C’s [built-in policies](..\articles\active-directory-b2c\active-directory-b2c-overview-custom.md) are recommended for most scenarios and provide easier configuration. The two configuration approaches (i.e. built-in and custom) can co-exist in the same Azure AD B2C tenant. Learn more [here](..\articles\active-directory-b2c\active-directory-b2c-overview-custom.md).
+---
+author: PatAltimore
+ms.service: active-directory-b2c 
+ms.topic: include
+ms.date: 11/30/2018
+ms.author: patricka
+---
+> [!NOTE]
+> **Custom policies are in public preview.**
+> 
+> [Custom policies](../articles/active-directory-b2c/active-directory-b2c-get-started-custom.md) are designed primarily to address complex scenarios. For most scenarios, we recommend that you use Azure Active Directory B2C [built-in policies](../articles/active-directory-b2c/active-directory-b2c-reference-policies.md). Built-in policies are easier to set up for your configuration.

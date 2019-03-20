@@ -10,14 +10,14 @@ editor: tysonn
 ms.assetid: 
 ms.service: azure-resource-manager
 ms.devlang: na
-ms.topic: article
+ms.topic: reference
 ms.tgt_pltfrm: na
 ms.workload: na
-ms.date: 04/26/2017
+ms.date: 11/8/2018
 ms.author: tomfitz
 
 ---
-# Array and object functions for Azure Resource Manager templates 
+# Array and object functions for Azure Resource Manager templates
 
 Resource Manager provides several functions for working with arrays and objects.
 
@@ -29,10 +29,11 @@ Resource Manager provides several functions for working with arrays and objects.
 * [empty](#empty)
 * [first](#first)
 * [intersection](#intersection)
+* [json](#json)
 * [last](#last)
 * [length](#length)
-* [min](#min)
 * [max](#max)
+* [min](#min)
 * [range](#range)
 * [skip](#skip)
 * [take](#take)
@@ -41,6 +42,8 @@ Resource Manager provides several functions for working with arrays and objects.
 To get an array of string values delimited by a value, see [split](resource-group-template-functions-string.md#split).
 
 <a id="array" />
+
+[!INCLUDE [updated-for-az](../../includes/updated-for-az.md)]
 
 ## array
 `array(convertToArray)`
@@ -53,9 +56,13 @@ Converts the value to an array.
 |:--- |:--- |:--- |:--- |
 | convertToArray |Yes |int, string, array, or object |The value to convert to an array. |
 
-### Examples
+### Return value
 
-The following example shows how to use the array function with different types.
+An array.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/array.json) shows how to use the array function with different types.
 
 ```json
 {
@@ -68,7 +75,7 @@ The following example shows how to use the array function with different types.
         },
         "stringToConvert": {
             "type": "string",
-            "defaultValue": "a"
+            "defaultValue": "efgh"
         },
         "objectToConvert": {
             "type": "object",
@@ -94,9 +101,25 @@ The following example shows how to use the array function with different types.
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| intOutput | Array | [1] |
+| stringOutput | Array | ["efgh"] |
+| objectOutput | Array | [{"a": "b", "c": "d"}] |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/array.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/array.json
+```
 
 <a id="coalesce" />
 
@@ -112,9 +135,13 @@ Returns first non-null value from the parameters. Empty strings, empty arrays, a
 | arg1 |Yes |int, string, array, or object |The first value to test for null. |
 | additional args |No |int, string, array, or object |Additional values to test for null. |
 
-### Examples
+### Return value
 
-The following example shows the output from different uses of coalesce.
+The value of the first non-null parameters, which can be a string, int, array, or object. Null if all parameters are null. 
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/coalesce.json) shows the output from different uses of coalesce.
 
 ```json
 {
@@ -123,7 +150,14 @@ The following example shows the output from different uses of coalesce.
     "parameters": {
         "objectToTest": {
             "type": "object",
-            "defaultValue": {"first": null, "second": null}
+            "defaultValue": {
+                "null1": null, 
+                "null2": null,
+                "string": "default",
+                "int": 1,
+                "object": {"first": "default"},
+                "array": [1]
+            }
         }
     },
     "resources": [
@@ -131,27 +165,49 @@ The following example shows the output from different uses of coalesce.
     "outputs": {
         "stringOutput": {
             "type": "string",
-            "value": "[coalesce(parameters('objectToTest').first, parameters('objectToTest').second, 'fallback')]"
+            "value": "[coalesce(parameters('objectToTest').null1, parameters('objectToTest').null2, parameters('objectToTest').string)]"
         },
         "intOutput": {
             "type": "int",
-            "value": "[coalesce(parameters('objectToTest').first, parameters('objectToTest').second, 1)]"
+            "value": "[coalesce(parameters('objectToTest').null1, parameters('objectToTest').null2, parameters('objectToTest').int)]"
         },
         "objectOutput": {
             "type": "object",
-            "value": "[coalesce(parameters('objectToTest').first, parameters('objectToTest').second, parameters('objectToTest'))]"
+            "value": "[coalesce(parameters('objectToTest').null1, parameters('objectToTest').null2, parameters('objectToTest').object)]"
         },
         "arrayOutput": {
             "type": "array",
-            "value": "[coalesce(parameters('objectToTest').first, parameters('objectToTest').second, array(1))]"
+            "value": "[coalesce(parameters('objectToTest').null1, parameters('objectToTest').null2, parameters('objectToTest').array)]"
+        },
+        "emptyOutput": {
+            "type": "bool",
+            "value": "[empty(coalesce(parameters('objectToTest').null1, parameters('objectToTest').null2))]"
         }
     }
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-The value of the first non-null parameters, which can be a string, int, array, or object. Null if all parameters are null. 
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| stringOutput | String | default |
+| intOutput | Int | 1 |
+| objectOutput | Object | {"first": "default"} |
+| arrayOutput | Array | [1] |
+| emptyOutput | Bool | True |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/coalesce.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/coalesce.json
+```
 
 <a id="concat" />
 
@@ -169,9 +225,12 @@ Combines multiple arrays and returns the concatenated array, or combines multipl
 
 This function can take any number of arguments, and can accept either strings or arrays for the parameters.
 
-### Examples
+### Return value
+A string or array of concatenated values.
 
-The following example shows how to combine two arrays.
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/concat-array.json) shows how to combine two arrays.
 
 ```json
 {
@@ -206,7 +265,25 @@ The following example shows how to combine two arrays.
 }
 ```
 
-The following example shows how to combine two string values and return a concatenated string.
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| return | Array | ["1-1", "1-2", "1-3", "2-1", "2-2", "2-3"] |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/concat-array.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/concat-array.json
+```
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/concat-string.json) shows how to combine two string values and return a concatenated string.
 
 ```json
 {
@@ -221,22 +298,37 @@ The following example shows how to combine two string values and return a concat
     "resources": [],
     "outputs": {
         "concatOutput": {
-            "value": "[concat(parameters('prefix'), uniqueString(resourceGroup().id))]",
+            "value": "[concat(parameters('prefix'), '-', uniqueString(resourceGroup().id))]",
             "type" : "string"
         }
     }
 }
 ```
 
-### Return value
-A string or array of concatenated values.
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| concatOutput | String | prefix-5yj4yjf5mbg72 |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/concat-string.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/concat-string.json
+```
 
 <a id="contains" />
 
 ## contains
 `contains(container, itemToFind)`
 
-Checks whether an array contains a value, an object contains a key, or a string contains a substring.
+Checks whether an array contains a value, an object contains a key, or a string contains a substring. The string comparison is case-sensitive. However, when testing if an object contains a key, the comparison is case-insensitive.
 
 ### Parameters
 
@@ -245,9 +337,13 @@ Checks whether an array contains a value, an object contains a key, or a string 
 | container |Yes |array, object, or string |The value that contains the value to find. |
 | itemToFind |Yes |string or int |The value to find. |
 
-### Examples
+### Return value
 
-The following example shows how to use contains with different types:
+**True** if the item is found; otherwise, **False**.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/contains.json) shows how to use contains with different types:
 
 ```json
 {
@@ -298,9 +394,28 @@ The following example shows how to use contains with different types:
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-**True** if the item is found; otherwise, **False**.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| stringTrue | Bool | True |
+| stringFalse | Bool | False |
+| objectTrue | Bool | True |
+| objectFalse | Bool | False |
+| arrayTrue | Bool | True |
+| arrayFalse | Bool | False |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/contains.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/contains.json
+```
 
 <a id="createarray" />
 
@@ -316,9 +431,13 @@ Creates an array from the parameters.
 | arg1 |Yes |String, Integer, Array, or Object |The first value in the array. |
 | additional arguments |No |String, Integer, Array, or Object |Additional values in the array. |
 
-### Examples
+### Return value
 
-The following example shows how to use createArray with different types:
+An array.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/createarray.json) shows how to use createArray with different types:
 
 ```json
 {
@@ -357,9 +476,26 @@ The following example shows how to use createArray with different types:
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| stringArray | Array | ["a", "b", "c"] |
+| intArray | Array | [1, 2, 3] |
+| objectArray | Array | [{"one": "a", "two": "b", "three": "c"}] |
+| arrayArray | Array | [["one", "two", "three"]] |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/createarray.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/createarray.json
+```
 
 <a id="empty" />
 
@@ -375,9 +511,13 @@ Determines if an array, object, or string is empty.
 |:--- |:--- |:--- |:--- |
 | itemToTest |Yes |array, object, or string |The value to check if it is empty. |
 
-### Examples
+### Return value
 
-The following example checks whether an array, object, and string are empty.
+Returns **True** if the value is empty; otherwise, **False**.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/empty.json) checks whether an array, object, and string are empty.
 
 ```json
 {
@@ -416,9 +556,25 @@ The following example checks whether an array, object, and string are empty.
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-Returns **True** if the value is empty; otherwise, **False**.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayEmpty | Bool | True |
+| objectEmpty | Bool | True |
+| stringEmpty | Bool | True |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/empty.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/empty.json
+```
 
 <a id="first" />
 
@@ -433,9 +589,13 @@ Returns the first element of the array, or first character of the string.
 |:--- |:--- |:--- |:--- |
 | arg1 |Yes |array or string |The value to retrieve the first element or character. |
 
-### Examples
+### Return value
 
-The following example shows how to use the first function with an array and string.
+The type (string, int, array, or object) of the first element in an array, or the first character of a string.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/first.json) shows how to use the first function with an array and string.
 
 ```json
 {
@@ -462,9 +622,24 @@ The following example shows how to use the first function with an array and stri
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-The type (string, int, array, or object) of the first element in an array, or a string of the first character.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | String | one |
+| stringOutput | String | O |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/first.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/first.json
+```
 
 <a id="intersection" />
 
@@ -481,9 +656,13 @@ Returns a single array or object with the common elements from the parameters.
 | arg2 |Yes |array or object |The second value to use for finding common elements. |
 | additional arguments |No |array or object |Additional values to use for finding common elements. |
 
-### Examples
+### Return value
 
-The following example shows how to use intersection with arrays and objects:
+An array or object with the common elements.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/intersection.json) shows how to use intersection with arrays and objects:
 
 ```json
 {
@@ -522,9 +701,97 @@ The following example shows how to use intersection with arrays and objects:
 }
 ```
 
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| objectOutput | Object | {"one": "a", "three": "c"} |
+| arrayOutput | Array | ["two", "three"] |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/intersection.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/intersection.json
+```
+
+## json
+`json(arg1)`
+
+Returns a JSON object.
+
+### Parameters
+
+| Parameter | Required | Type | Description |
+|:--- |:--- |:--- |:--- |
+| arg1 |Yes |string |The value to convert to JSON. |
+
+
 ### Return value
 
-An array or object with the common elements.
+The JSON object from the specified string, or an empty object when **null** is specified.
+
+### Remarks
+
+If you need to include a parameter value or variable in the JSON object, use the [concat](resource-group-template-functions-string.md#concat) function to create the string that you pass to the function.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/json.json) shows how to use the json function with arrays and objects:
+
+```json
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "testValue": {
+            "type": "string",
+            "defaultValue": "demo value"
+        }
+    },
+    "resources": [
+    ],
+    "outputs": {
+        "jsonOutput": {
+            "type": "object",
+            "value": "[json('{\"a\": \"b\"}')]"
+        },
+        "nullOutput": {
+            "type": "bool",
+            "value": "[empty(json('null'))]"
+        },
+        "paramOutput": {
+            "type": "object",
+            "value": "[json(concat('{\"a\": \"', parameters('testValue'), '\"}'))]"
+        }
+    }
+}
+```
+
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| jsonOutput | Object | {"a": "b"} |
+| nullOutput | Boolean | True |
+| paramOutput | Object | {"a": "demo value"}
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/json.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/json.json
+```
 
 <a id="last" />
 
@@ -539,9 +806,13 @@ Returns the last element of the array, or last character of the string.
 |:--- |:--- |:--- |:--- |
 | arg1 |Yes |array or string |The value to retrieve the last element or character. |
 
-### Examples
+### Return value
 
-The following example shows how to use the last function with an array and string.
+The type (string, int, array, or object) of the last element in an array, or the last character of a string.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/last.json) shows how to use the last function with an array and string.
 
 ```json
 {
@@ -568,9 +839,24 @@ The following example shows how to use the last function with an array and strin
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-The type (string, int, array, or object) of the last element in an array, or a string of the last character.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | String | three |
+| stringOutput | String | e |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/last.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/last.json
+```
 
 <a id="length" />
 
@@ -585,9 +871,13 @@ Returns the number of elements in an array, or characters in a string.
 |:--- |:--- |:--- |:--- |
 | arg1 |Yes |array or string |The array to use for getting the number of elements, or the string to use for getting the number of characters. |
 
-### Examples
+### Return value
 
-The following example shows how to use length with an array and string:
+An int. 
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/length.json) shows how to use length with an array and string:
 
 ```json
 {
@@ -621,6 +911,25 @@ The following example shows how to use length with an array and string:
 }
 ```
 
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayLength | Int | 3 |
+| stringLength | Int | 13 |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/length.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/length.json
+```
+
 You can use this function with an array to specify the number of iterations when creating resources. In the following example, the parameter **siteNames** would refer to an array of names to use when creating the web sites.
 
 ```json
@@ -631,55 +940,6 @@ You can use this function with an array to specify the number of iterations when
 ```
 
 For more information about using this function with an array, see [Create multiple instances of resources in Azure Resource Manager](resource-group-create-multiple.md).
-
-### Return value
-
-An int. 
-
-<a id="min" />
-
-## min
-`min(arg1)`
-
-Returns the minimum value from an array of integers or a comma-separated list of integers.
-
-### Parameters
-
-| Parameter | Required | Type | Description |
-|:--- |:--- |:--- |:--- |
-| arg1 |Yes |array of integers, or comma-separated list of integers |The collection to get the minimum value. |
-
-### Examples
-
-The following example shows how to use min with an array and a list of integers:
-
-```json
-{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "arrayToTest": {
-            "type": "array",
-            "defaultValue": [0,3,2,5,4]
-        }
-    },
-    "resources": [],
-    "outputs": {
-        "arrayOutput": {
-            "type": "int",
-            "value": "[min(parameters('arrayToTest'))]"
-        },
-        "intOutput": {
-            "type": "int",
-            "value": "[min(0,3,2,5,4)]"
-        }
-    }
-}
-```
-
-### Return value
-
-An int representing the minimum value.
 
 <a id="max" />
 
@@ -694,9 +954,13 @@ Returns the maximum value from an array of integers or a comma-separated list of
 |:--- |:--- |:--- |:--- |
 | arg1 |Yes |array of integers, or comma-separated list of integers |The collection to get the maximum value. |
 
-### Examples
+### Return value
 
-The following example shows how to use max with an array and a list of integers:
+An int representing the maximum value.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/max.json) shows how to use max with an array and a list of integers:
 
 ```json
 {
@@ -722,9 +986,88 @@ The following example shows how to use max with an array and a list of integers:
 }
 ```
 
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | Int | 5 |
+| intOutput | Int | 5 |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/max.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/max.json
+```
+
+<a id="min" />
+
+## min
+`min(arg1)`
+
+Returns the minimum value from an array of integers or a comma-separated list of integers.
+
+### Parameters
+
+| Parameter | Required | Type | Description |
+|:--- |:--- |:--- |:--- |
+| arg1 |Yes |array of integers, or comma-separated list of integers |The collection to get the minimum value. |
+
 ### Return value
 
-An int representing the maximum value.
+An int representing the minimum value.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/min.json) shows how to use min with an array and a list of integers:
+
+```json
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "arrayToTest": {
+            "type": "array",
+            "defaultValue": [0,3,2,5,4]
+        }
+    },
+    "resources": [],
+    "outputs": {
+        "arrayOutput": {
+            "type": "int",
+            "value": "[min(parameters('arrayToTest'))]"
+        },
+        "intOutput": {
+            "type": "int",
+            "value": "[min(0,3,2,5,4)]"
+        }
+    }
+}
+```
+
+The output from the preceding example with the default values is:
+
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | Int | 0 |
+| intOutput | Int | 0 |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/min.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/min.json
+```
 
 <a id="range" />
 
@@ -740,9 +1083,13 @@ Creates an array of integers from a starting integer and containing a number of 
 | startingInteger |Yes |int |The first integer in the array. |
 | numberofElements |Yes |int |The number of integers in the array. |
 
-### Examples
+### Return value
 
-The following example shows how to use the range function:
+An array of integers.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/range.json) shows how to use the range function:
 
 ```json
 {
@@ -768,9 +1115,23 @@ The following example shows how to use the range function:
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array of integers.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| rangeOutput | Array | [5, 6, 7] |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/range.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/range.json
+```
 
 <a id="skip" />
 
@@ -786,9 +1147,13 @@ Returns an array with all the elements after the specified number in the array, 
 | originalValue |Yes |array or string |The array or string to use for skipping. |
 | numberToSkip |Yes |int |The number of elements or characters to skip. If this value is 0 or less, all the elements or characters in the value are returned. If it is larger than the length of the array or string, an empty array or string is returned. |
 
-### Examples
+### Return value
 
-The following example skips the specified number of elements in the array, and the specified number of characters in a string.
+An array or string.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/skip.json) skips the specified number of elements in the array, and the specified number of characters in a string.
 
 ```json
 {
@@ -830,9 +1195,24 @@ The following example skips the specified number of elements in the array, and t
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array or string.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | Array | ["three"] |
+| stringOutput | String | two three |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/skip.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/skip.json
+```
 
 <a id="take" />
 
@@ -848,9 +1228,13 @@ Returns an array with the specified number of elements from the start of the arr
 | originalValue |Yes |array or string |The array or string to take the elements from. |
 | numberToTake |Yes |int |The number of elements or characters to take. If this value is 0 or less, an empty array or string is returned. If it is larger than the length of the given array or string, all the elements in the array or string are returned. |
 
-### Examples
+### Return value
 
-The following example takes the specified number of elements from the array, and characters from a string.
+An array or string.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/take.json) takes the specified number of elements from the array, and characters from a string.
 
 ```json
 {
@@ -892,9 +1276,24 @@ The following example takes the specified number of elements from the array, and
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array or string.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| arrayOutput | Array | ["one", "two"] |
+| stringOutput | String | on |
+
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/take.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/take.json
+```
 
 <a id="union" />
 
@@ -911,9 +1310,13 @@ Returns a single array or object with all elements from the parameters. Duplicat
 | arg2 |Yes |array or object |The second value to use for joining elements. |
 | additional arguments |No |array or object |Additional values to use for joining elements. |
 
-### Examples
+### Return value
 
-The following example shows how to use union with arrays and objects:
+An array or object.
+
+### Example
+
+The following [example template](https://github.com/Azure/azure-docs-json-samples/blob/master/azure-resource-manager/functions/union.json) shows how to use union with arrays and objects:
 
 ```json
 {
@@ -922,11 +1325,11 @@ The following example shows how to use union with arrays and objects:
     "parameters": {
         "firstObject": {
             "type": "object",
-            "defaultValue": {"one": "a", "two": "b", "three": "c"}
+            "defaultValue": {"one": "a", "two": "b", "three": "c1"}
         },
         "secondObject": {
             "type": "object",
-            "defaultValue": {"four": "d", "five": "e", "six": "f"}
+            "defaultValue": {"three": "c2", "four": "d", "five": "e"}
         },
         "firstArray": {
             "type": "array",
@@ -934,7 +1337,7 @@ The following example shows how to use union with arrays and objects:
         },
         "secondArray": {
             "type": "array",
-            "defaultValue": ["four", "five"]
+            "defaultValue": ["three", "four"]
         }
     },
     "resources": [
@@ -952,11 +1355,26 @@ The following example shows how to use union with arrays and objects:
 }
 ```
 
-### Return value
+The output from the preceding example with the default values is:
 
-An array or object.
+| Name | Type | Value |
+| ---- | ---- | ----- |
+| objectOutput | Object | {"one": "a", "two": "b", "three": "c2", "four": "d", "five": "e"} |
+| arrayOutput | Array | ["one", "two", "three", "four"] |
 
-## Next Steps
+To deploy this example template with Azure CLI, use:
+
+```azurecli-interactive
+az group deployment create -g functionexamplegroup --template-uri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/union.json
+```
+
+To deploy this example template with PowerShell, use:
+
+```azurepowershell-interactive
+New-AzResourceGroupDeployment -ResourceGroupName functionexamplegroup -TemplateUri https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/azure-resource-manager/functions/union.json
+```
+
+## Next steps
 * For a description of the sections in an Azure Resource Manager template, see [Authoring Azure Resource Manager templates](resource-group-authoring-templates.md).
 * To merge multiple templates, see [Using linked templates with Azure Resource Manager](resource-group-linked-templates.md).
 * To iterate a specified number of times when creating a type of resource, see [Create multiple instances of resources in Azure Resource Manager](resource-group-create-multiple.md).

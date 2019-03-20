@@ -1,34 +1,27 @@
 ---
-title: Extend U-SQL scripts with R in Azure Data Lake Analytics | Microsoft Docs
-description: 'Learn how to run R code in U-SQL Scripts'
+title: Extend U-SQL scripts with R in Azure Data Lake Analytics
+description: Learn how to run R code in U-SQL scripts using Azure Data Lake Analytics
 services: data-lake-analytics
-documentationcenter: ''
-author: saveenr
-manager: sukvg
-editor: cgronlun
-
-ms.assetid: c1c74e5e-3e4a-41ab-9e3f-e9085da1d315
 ms.service: data-lake-analytics
-ms.devlang: na
-ms.topic: article
-ms.tgt_pltfrm: na
-ms.workload: big-data
-ms.date: 05/01/2017
+author: saveenr
 ms.author: saveenr
 
+ms.reviewer: jasonwhowell
+ms.assetid: c1c74e5e-3e4a-41ab-9e3f-e9085da1d315
+ms.topic: conceptual
+ms.date: 06/20/2017
 ---
-
-# Tutorial: Get started with extending U-SQL with R
+# Extend U-SQL scripts with R code in Azure Data Lake Analytics
 
 The following example illustrates the basic steps for deploying R code:
-* Use the REFERENCE ASSEMBLY statement to enable R extensions for the U-SQL Script.
-* Use the REDUCE operation to partition the input data on a key.
-* The R extensions for U-SQL include a built-in reducer (Extension.R.Reducer) that runs R code on each vertex assigned to the reducer. 
-* Usage of dedicated named data frames called inputFromUSQL and outputToUSQL respectively to pass data between USQL and R. Input and output DataFrame identifier names are fixed (that is, users cannot change these predefined names of input and output DataFrame identifiers).
+* Use the `REFERENCE ASSEMBLY` statement to enable R extensions for the U-SQL Script.
+* Use the` REDUCE` operation to partition the input data on a key.
+* The R extensions for U-SQL include a built-in reducer (`Extension.R.Reducer`) that runs R code on each vertex assigned to the reducer. 
+* Usage of dedicated named data frames called `inputFromUSQL` and `outputToUSQL `respectively to pass data between U-SQL and R. Input and output DataFrame identifier names are fixed (that is, users cannot change these predefined names of input and output DataFrame identifiers).
 
 ## Embedding R code in the U-SQL script
 
-You can inline the R code your U-SQL script by using the command parameter of the Extension.R.Reducer. For example, you can declare the R script as a string variable and pass it as a parameter to the Reducer.
+You can inline the R code your U-SQL script by using the command parameter of the `Extension.R.Reducer`. For example, you can declare the R script as a string variable and pass it as a parameter to the Reducer.
 
 
     REFERENCE ASSEMBLY [ExtR];
@@ -93,10 +86,10 @@ Use a U-SQL script to deploy that R script with the DEPLOY RESOURCE statement.
 ## How R Integrates with U-SQL
 
 ### Datatypes
-* String and numeric columns from U-SQL are converted as-is between R DataFrame and U-SQL [supported types: double, string, bool, integer, byte].
-* Factor datatype is not supported in U-SQL.
-* byte[] must be serialized as a base64-encoded string.
-* U-SQL strings can be converted to factors in R code, once U-SQL create R input dataframe or by setting the reducer parameter stringsAsFactors: true.
+* String and numeric columns from U-SQL are converted as-is between R DataFrame and U-SQL [supported types: `double`, `string`, `bool`, `integer`, `byte`].
+* The `Factor` datatype is not supported in U-SQL.
+* `byte[]` must be serialized as a base64-encoded `string`.
+* U-SQL strings can be converted to factors in R code, once U-SQL create R input dataframe or by setting the reducer parameter `stringsAsFactors: true`.
 
 ### Schemas
 * U-SQL datasets cannot have duplicate column names.
@@ -106,7 +99,7 @@ Use a U-SQL script to deploy that R script with the DEPLOY RESOURCE statement.
 
 ### Functional limitations
 * The R Engine can't be instantiated twice in the same process. 
-* Currently, U-SQL dies not support Combiner UDOs for prediction using partitioned models generated using Reducer UDOs. Users can declare the partitioned models as resource and use them in their R Script (see sample code ExtR_PredictUsingLMRawStringReducer.usql)
+* Currently, U-SQL does not support Combiner UDOs for prediction using partitioned models generated using Reducer UDOs. Users can declare the partitioned models as resource and use them in their R Script (see sample code `ExtR_PredictUsingLMRawStringReducer.usql`)
 
 ### R Versions
 Only R 3.2.2 is supported.
@@ -165,17 +158,17 @@ Only R 3.2.2 is supported.
 Every vertex has a limited amount of memory assigned to it. Because the input and output DataFrames must exist in memory in the R code, the total size for the input and output cannot exceed 500 MB.
 
 ### Sample Code
-More sample code is available in your Data Lake Store account after you install the U-SQL Advanced Analytics extensions. The path for more sample code is: <your_account_address>/usqlext/samples/R. 
+More sample code is available in your Data Lake Store account after you install the U-SQL Advanced Analytics extensions. The path for more sample code is: `<your_account_address>/usqlext/samples/R`. 
 
 ## Deploying Custom R modules with U-SQL
 
-First, create an R custom module and zip it and then upload the zipped R custom module file to your ADL store. In the example, we will upload magittr_1.5.zip to the root of the default ADLS account for the ADLA account we are using. Once you upload the module to ADL store, declare it as use DEPLOY RESOURCE to make it available in your U-SQL script and call "install.packages" to install it.
+First, create an R custom module and zip it and then upload the zipped R custom module file to your ADL store. In the example, we will upload magittr_1.5.zip to the root of the default ADLS account for the ADLA account we are using. Once you upload the module to ADL store, declare it as use DEPLOY RESOURCE to make it available in your U-SQL script and call `install.packages` to install it.
 
     REFERENCE ASSEMBLY [ExtR];
     DEPLOY RESOURCE @"/magrittr_1.5.zip";
 
     DECLARE @IrisData string =  @"/usqlext/samples/R/iris.csv";
-    DECLARE @OutputFileModelSummary string = @"/R/Output/CustomePackages.txt";
+    DECLARE @OutputFileModelSummary string = @"/R/Output/CustomPackages.txt";
 
     // R script to run
     DECLARE @myRScript = @"
@@ -207,7 +200,6 @@ First, create an R custom module and zip it and then upload the zipped R custom 
     USING new Extension.R.Reducer(command:@myRScript, rReturnType:"charactermatrix");
 
     OUTPUT @RScriptOutput TO @OutputFileModelSummary USING Outputters.Tsv();
-
 
 ## Next Steps
 * [Overview of Microsoft Azure Data Lake Analytics](data-lake-analytics-overview.md)

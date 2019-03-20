@@ -1,14 +1,30 @@
-| **Resource** | **Default Limit** | **Maximum Limit** |
+---
+ title: include file
+ description: include file
+ services: batch
+ author: dlepow
+ ms.service: batch
+ ms.topic: include
+ ms.date: 10/11/2018
+ ms.author: danlep
+ ms.custom: include file
+---
+
+| **Resource** | **Default limit** | **Maximum limit** |
 | --- | --- | --- |
-| Batch accounts per region per subscription |3 |50 |
-| Cores per Batch account (Batch service mode)<sup>1</sup> |20 |N/A<sup>2</sup> |
-| Active jobs and job schedules<sup>3</sup> per Batch account |20 |5000<sup>4</sup> |
-| Pools per Batch account |20 |2500 |
+| Azure Batch accounts per region per subscription | 1-3 |50 |
+| Dedicated cores per Batch account | 10-100 | N/A<sup>1</sup> |
+| Low-priority cores per Batch account | 10-100 | N/A<sup>2</sup> |
+| Active jobs and job schedules<sup>3</sup> per Batch account | 100-300 | 1,000<sup>4</sup> |
+| Pools per Batch account | 20-100 | 500<sup>4</sup> |
 
-<sup>1</sup> Cores quotas shown are only for accounts with the pool allocation mode set to **Batch service**. For accounts with the mode set to **user subscription**, cores quotas are based on the VM cores quota at a regional level or per VM family in your subscription.
+> [!NOTE]
+> Default limits vary depending on the type of subscription you use to create a Batch account. Cores quotas shown are for Batch accounts in Batch service mode. [View the quotas in your Batch account](../articles/batch/batch-quota-limit.md#view-batch-quotas). 
 
-<sup>2</sup> The number of cores per Batch account can be increased, but the maximum number is unspecified. Contact Azure support to discuss increase options.
+<sup>1</sup>The number of dedicated cores per Batch account can be increased, but the maximum number is unspecified. To discuss increase options, contact Azure Support.
 
-<sup>3</sup> Completed jobs and job schedules are not limited.
+<sup>2</sup>The number of low-priority cores per Batch account can be increased, but the maximum number is unspecified. To discuss increase options, contact Azure Support.
 
-<sup>4</sup> Contact Azure support if you want to request an increase beyond this limit.
+<sup>3</sup>Completed jobs and job schedules aren't limited.
+
+<sup>4</sup>To request an increase beyond this limit, contact Azure Support.

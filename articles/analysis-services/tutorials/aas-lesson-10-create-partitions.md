@@ -1,24 +1,18 @@
 ---
 title: "Azure Analysis Services tutorial lesson 10: Create partitions | Microsoft Docs"
 description: Describes how to create partitions in the Azure Analysis Services tutorial project. 
-services: analysis-services
-documentationcenter: ''
 author: minewiskan
-manager: erikre
-editor: ''
-tags: ''
-
-ms.assetid: 
-ms.service: analysis-services
-ms.devlang: NA
-ms.topic: article
-ms.tgt_pltfrm: NA
-ms.workload: na
-ms.date: 05/02/2017
+manager: kfile
+ms.service: azure-analysis-services
+ms.topic: conceptual
+ms.date: 01/09/2019
 ms.author: owend
+ms.reviewer: minewiskan
+
 ---
-# Lesson 10: Create partitions
-In this lesson, you create partitions to divide the FactInternetSales table into smaller logical parts that can be processed (refreshed) independent of other partitions. By default, every table you include in your model has one partition, which includes all of the table’s columns and rows. For the FactInternetSales table, we want to divide the data by year; one partition for each of the table’s five years. Each partition can then be processed independently. To learn more, see [Partitions](https://docs.microsoft.com/sql/analysis-services/tabular-models/partitions-ssas-tabular). 
+# Create partitions
+
+In this lesson, you create partitions to divide the FactInternetSales table into smaller logical parts that can be processed (refreshed) independent of other partitions. By default, every table you include in your model has one partition, which includes all the table’s columns and rows. For the FactInternetSales table, we want to divide the data by year; one partition for each of the table’s five years. Each partition can then be processed independently. To learn more, see [Partitions](https://docs.microsoft.com/sql/analysis-services/tabular-models/partitions-ssas-tabular). 
   
 Estimated time to complete this lesson: **15 minutes**  
   
@@ -45,9 +39,9 @@ This topic is part of a tabular modeling tutorial, which should be completed in 
 
     ![aas-lesson10-filter-rows](../tutorials/media/aas-lesson10-filter-rows.png)
     
-    Notice in Query Editor, in APPLIED STEPS, you see another step named Filtered Rows; this is the filter you applied to select only order dates from 2010.
+    Notice in Query Editor, in APPLIED STEPS, you see another step named Filtered Rows. This filter is to select only order dates from 2010.
 
-8.  Click **Import** to run the query.
+8.  Click **Import**.
 
     In Partition Manager, notice the query expression now has an additional Filtered Rows clause.
 
@@ -105,9 +99,9 @@ In Partition Manager, notice the **Last Processed** column for each of the new p
   
     If you're prompted for Impersonation credentials, enter the Windows user name and password you specified in Lesson 2.  
   
-    The **Data Processing** dialog box appears and displays process details for each partition. Notice that a different number of rows for each partition are transferred. This is because each partition includes only those rows for the year specified in the WHERE clause in the SQL Statement. When processing is finished, go ahead and close the Data Processing dialog box.  
+    The **Data Processing** dialog box appears and displays process details for each partition. Notice that a different number of rows for each partition are transferred. Each partition includes only those rows for the year specified in the WHERE clause in the SQL Statement. When processing is finished, go ahead and close the Data Processing dialog box.  
   
     ![aas-lesson10-process-complete](../tutorials/media/aas-lesson10-process-complete.png)
   
- ## What's next?
+## What's next?
 Go to the next lesson: [Lesson 11: Create Roles](../tutorials/aas-lesson-11-create-roles.md). 

@@ -1,18 +1,21 @@
 ---
-title: FAQs for the Computer Vision API | Microsoft Docs
-description: Get answers to frequently asked questions about the Computer Vision API in Microsoft Cognitive Services.
+title: Frequently asked questions - Computer Vision
+titlesuffix: Azure Cognitive Services
+description: Get answers to frequently asked questions about the Computer Vision API in Azure Cognitive Services.
 services: cognitive-services
-author: JuliaNik
-manager: ytkuo
+author: KellyDF
+manager: nitinme
 
-ms.service: cognitive-services 
-ms.technology: computer-vision
-ms.topic: article
+ms.service: cognitive-services
+ms.subservice: computer-vision
+ms.topic: conceptual
 ms.date: 01/26/2017
-ms.author: juliakuz
+ms.author: kefre
+ms.custom: seodec18
 ---
 
 # Computer Vision API Frequently Asked Questions
+
 ### If you can't find answers to your questions in this FAQ, try asking the Computer Vision API community on [StackOverflow](https://stackoverflow.com/questions/tagged/project-oxford+or+microsoft-cognitive) or contact [Help and Support on UserVoice](https://cognitive.uservoice.com/)
 
 -----
@@ -25,7 +28,7 @@ ms.author: juliakuz
 
 **Question**: *Can Computer Vision be used locally without an internet connection?*
 
-**Answer**: We currently do not offer an on-premise or local solution.
+**Answer**: We currently do not offer an on-premises or local solution.
 
 -----
 
@@ -39,7 +42,7 @@ Supported languages include:
 | Danish (da-DK)  | Dutch (nl-NL)     | English           | Finnish (fi-FI)            |French (fr-FR)
 | German (de-DE)  | Greek (el-GR)     | Hungarian (hu-HU) | Italian (it-IT)            | Japanese (ja-JP)
 | Korean (ko-KR)  | Norwegian (nb-NO) | Polish (pl-PL)    | Portuguese (pt-BR) (pt-PT) | Russian (ru-RU)
-| Spanish (es-ES)	| Swedish (sv-SV)	  | Turkish (tr-TU)   |                            |
+| Spanish (es-ES)	| Swedish (sv-SV)	  | Turkish (tr-TR)   |                            |
 
 -----
 
@@ -49,7 +52,7 @@ Supported languages include:
 
 -----
 
-**Question:** *Which languages are supported for handwriting recognition?*
+**Question**: *Which languages are supported for handwriting recognition?*
 
 **Answer**: Currently, only English is supported.
 

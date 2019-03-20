@@ -1,13 +1,10 @@
----
+﻿---
 title: Country/Region hierarchy used by Azure Traffic Manager Geographic routing type| Microsoft Docs
 description: This article lists Country/Region hierarchy used by Azure Traffic Manager Geographic routing type
 services: traffic-manager
 documentationcenter: ''
 author: kumudd
-manager: timlt
-editor: ''
-
-ms.assetid:
+manager: twooley
 ms.service: traffic-manager
 ms.devlang: na
 ms.topic: article
@@ -19,7 +16,7 @@ ms.author: kumud
 
 # Country/Region hierarchy used by Azure Traffic Manager for geographic traffic routing method
 
-This article lists the countries and regions used by the **Geographic**  traffic routing method in Azure Traffic Manager. You can also obtain this information programmatically by calling the [Azure Traffic Manager’s REST API](https://docs.microsoft.com/rest/api/trafficmanager/).  
+This article lists the countries and regions used by the **Geographic**  traffic routing method in Azure Traffic Manager. You can also obtain this information programmatically by calling the [Azure Traffic Manager’s REST API](https://docs.microsoft.com/rest/api/trafficmanager/). 
 
 - WORLD(World)
 
@@ -62,14 +59,6 @@ This article lists the countries and regions used by the **Geographic**  traffic
 		- FR(France)
 
 		- GB(United Kingdom)
-
-			- GB-ENG(England)
-
-			- GB-NIR(Northern Ireland)
-
-			- GB-SCT(Scotland)
-
-			- GB-WLS(Wales)
 
 		- GG(Guernsey)
 
@@ -697,7 +686,4 @@ This article lists the countries and regions used by the **Geographic**  traffic
 
 ## Next steps
 
-- Learn more about [Geographic traffic routing method in Azure Traffic Manager](traffic-manager-routing-methods.md#geographic-traffic-routing-method).
-
-
-
+- Learn more about [Geographic traffic routing method in Azure Traffic Manager](traffic-manager-routing-methods.md#geographic).

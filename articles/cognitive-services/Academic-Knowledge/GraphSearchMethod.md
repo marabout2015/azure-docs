@@ -1,13 +1,14 @@
 ---
-title: Graph Search method in the Academic Knowledge API | Microsoft Docs
-description: Use the Graph Search method in the Academic Knowledge API to return a set of academic entities based on specific graph patterns in Microsoft Cognitive Services.
+title: Graph Search method - Academic Knowledge API
+titlesuffix: Azure Cognitive Services
+description: Use the Graph Search method in the Academic Knowledge API to return a set of academic entities based on specific graph patterns.
 services: cognitive-services
 author: alch-msft
-manager: kuansanw
+manager: nitinme
 
 ms.service: cognitive-services
-ms.technology: academic-knowledge
-ms.topic: article
+ms.subservice: academic-knowledge
+ms.topic: conceptual
 ms.date: 03/23/2017
 ms.author: alch
 ---
@@ -19,11 +20,12 @@ The **graph search** REST API is used to return a set of academic entities based
 
 **REST endpoint:**  
 ```
-https://westus.api.cognitive.microsoft.com/academic/graph/v1.0/search?
+https://westus.api.cognitive.microsoft.com/academic/v1.0/graph/search?
 ```   
 <br>
 
 ## Request Parameters  
+
 Name     | Value | Required?  | Description
 -----------|-----------|---------|--------
 **mode**       | Text string | Yes | Name of the mode that you wish to use. The value is either *json* or *lambda*.
@@ -40,7 +42,9 @@ For the *json* search, the POST body is a JSON object. The JSON object describes
 For the *lambda* search, the POST body is a plain-text string. The POST body is a LIKQ lambda query string, which  is a single C# statement (see the [specification of query string](LambdaSearchSyntax.md) for *lambda* search). 
 
 <br>
+
 ## Response (JSON)
+
 Name | Description
 -------|-----   
 **results** | An array of 0 or more entities that match the query expression. Each entity contains the values of requested attributes. This field is present if the request has been successfully processed.
@@ -50,11 +54,12 @@ Name | Description
 If a query cannot be processed within _800 ms_, a _timeout_ error will be returned. 
 
 <br>
+
 #### Example:
 
 ##### JSON Search
 ```
-https://westus.api.cognitive.microsoft.com/academic/graph/v1.0/search?mode=json
+https://westus.api.cognitive.microsoft.com/academic/v1.0/graph/search?mode=json
 ```
 <br>
 For the *json* search, if we want to get the papers whose titles contain "graph engine" and written by "bin shao", we can specify the query as follows.
@@ -126,7 +131,7 @@ The output of a query is an array of graph paths. A graph path is an array of no
 ##### Lambda Search 
 
 ```
-https://westus.api.cognitive.microsoft.com/academic/graph/v1.0/search?mode=lambda
+https://westus.api.cognitive.microsoft.com/academic/v1.0/graph/search?mode=lambda
 ```
 <br>
 For the *lambda* search, if we want to get the author IDs of a given paper, we can write a query like the following one.
